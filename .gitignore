@@ -1,0 +1,24 @@
+# Flutter and Dart generated files
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+/build/reports/
+coverage/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.iml
+
+# Operating system and logs
+.DS_Store
+*.log
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
