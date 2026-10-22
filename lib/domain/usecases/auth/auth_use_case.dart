@@ -1,5 +1,6 @@
 import 'package:flutter_application/data/repositories/auth/auth_repo_impl.dart';
 import 'package:flutter_application/domain/models/auth/auth_model.dart';
+import 'package:flutter_application/presentation/common/constants.dart';
 
 class AuthUseCases {
   // Add your authentication use case methods here
@@ -19,9 +20,9 @@ class AuthUseCases {
   AuthUseCases._internal(this.authRepoImpl);
 
 
-  Future<bool> loginUseCase(AuthModel authModel) async {
+  Future<bool> loginUseCase(AuthModel authModel, DataSource source) async {
     // Implement your login logic here
-    return authRepoImpl.login(authModel);
+    return authRepoImpl.login(authModel, source.source);
   }
 
 }

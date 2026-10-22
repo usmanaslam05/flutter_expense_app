@@ -1,5 +1,6 @@
 import 'package:flutter_application/domain/models/auth/auth_model.dart';
 import 'package:flutter_application/domain/usecases/auth/auth_use_case.dart';
+import 'package:flutter_application/presentation/common/constants.dart';
 
 class LoginController {
 
@@ -32,6 +33,6 @@ class LoginController {
     /* If credentials not empty, then check for valid credentials. */
     // Here we will call use case to check for valid credentials.
 
-    return authUseCases.loginUseCase(authModel);
+    return authUseCases.loginUseCase(authModel, DataSource.local); // 0 for local source, 1 for remote source.
   }
 }
