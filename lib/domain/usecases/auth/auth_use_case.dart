@@ -8,7 +8,9 @@ class AuthUseCases {
   final AuthRepoImpl authRepoImpl;
 
   // The private constructor ensures that the class cannot be instantiated from outside with keyword static and final.
-  static final AuthUseCases _instance = AuthUseCases._internal(AuthRepoImpl());
+  static final AuthUseCases _instance = 
+    AuthUseCases._internal(AuthRepoImpl());
+
 
   // The function always provide the same instance of the class when called.
   factory AuthUseCases() {
@@ -17,12 +19,10 @@ class AuthUseCases {
 
   AuthUseCases._internal(this.authRepoImpl);
 
+
   Future<bool> loginUseCase(AuthModel authModel, DataSource source) async {
     // Implement your login logic here
     return authRepoImpl.login(authModel, source.source);
   }
 
-  Future<bool> registerUseCase(AuthModel authModel, DataSource source) async {
-    return authRepoImpl.register(authModel, source.source);
-  }
 }

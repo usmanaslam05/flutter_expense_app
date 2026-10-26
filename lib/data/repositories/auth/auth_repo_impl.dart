@@ -7,55 +7,63 @@ import 'package:flutter_application/domain/models/auth/auth_model.dart';
 import 'package:flutter_application/domain/repositories/auth/auth_repo.dart';
 
 class AuthRepoImpl implements AuthRepo {
-  final ExpenseDb _database = ExpenseDb();
-
   @override
   Future<bool> login(AuthModel authModel, int source) async {
+    // Implementation for login
     final dataAuthModel = authModel.toRemote();
+    
+    if(source == DataConstants.local) {
+      // Here we will check for user and password locally.
 
-    if (source == DataConstants.local) {
-      final UserDao userDao = UserDao(_database);
-      final fetchedUser = await userDao.getUserByUsernameAndPassword(
-        dataAuthModel.username,
-        dataAuthModel.password,
+      final UserDao userDao = UserDao(ExpenseDb());
+
+
+      // Get the user from local database.
+      await userDao.createUser(
+        UsersCompanion(
+          name: Value(dataAuthModel.username),
+          email: Value(dataAuthModel.username + '@example.com'),
+          password: Value(dataAuthModel.password),
+        )
       );
 
-      if (fetchedUser != null &&
-          fetchedUser.name == dataAuthModel.username &&
-          fetchedUser.password == dataAuthModel.password) {
-        print('Login successful for username: ${dataAuthModel.username}');
-        return true;
-      }
-      print('Login failed for username: ${dataAuthModel.username}');
-      return false;
+      final fetchedUser = (await userDao.getUserByUsernameAndPassword(dataAuthModel.username, 
+      dataAuthModel.password))?.toData();
+
+
+      print("Fetched user from local database: $fetchedUser");
+
+
+      // Check if the user exists and validate the password.
+      if(fetchedUser != null && 
+        fetchedUser.username == dataAuthModel.username && 
+        fetchedUser.password == dataAuthModel.password) {
+          print('Login successful for username: ${dataAuthModel.username}');
+          print('$dataAuthModel');
+          return await Future.value(true);
+        }
+        print('Login failed for username: ${dataAuthModel.username}');
+        print('$dataAuthModel');
+        return await Future.value(false);
+      
     } else {
+      // Check now for user name and password for validation. Here we will call API for login and check for valid credentials.
       print('Login source not supported: $source');
-      return false;
-    }
-  }
+      return await Future.value(false);
+    } 
 
-  @override
-  Future<bool> register(AuthModel authModel, int source) async {
-    final dataAuthModel = authModel.toRemote();
 
-    if (source != DataConstants.local) {
-      print('Registration source not supported: $source');
-      return false;
-    }
 
-    final UserDao userDao = UserDao(_database);
-    if (await userDao.getUserByUsername(dataAuthModel.username) != null) {
-      return false;
-    }
+    // if(dataAuthModel.username == AuthMockData.validUser.username && 
+    //   dataAuthModel.password == AuthMockData.validUser.password) {
+    //     print('Login successful for username: ${dataAuthModel.username}');
+    //     print('$dataAuthModel');
+    //     return await Future.value(true);
+    //   }
+    //   print('Login failed for username: ${dataAuthModel.username}');
+    //   print('$dataAuthModel');
+    //   return await Future.value(false); 
 
-    await userDao.createUser(
-      UsersCompanion(
-        name: Value(dataAuthModel.username),
-        email: Value('${dataAuthModel.username}@example.com'),
-        password: Value(dataAuthModel.password),
-      ),
-    );
-    return true;
   }
 
   @override
