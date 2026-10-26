@@ -15,11 +15,17 @@ class UserDao extends DatabaseAccessor<ExpenseDb> with _$UserDaoMixin {
     return into(users).insert(user);
   }
 
-  // Get a user by Username and Password
-  Future<User?> getUserByUsernameAndPassword(String username, String password) {
-    return (select(users)
-          ..where((tbl) => tbl.name.equals(username) & tbl.password.equals(password)))
-        .getSingleOrNull();
+  Future<User?> getUserByUsername(String username) {
+    return (select(
+      users,
+    )..where((tbl) => tbl.name.equals(username))).getSingleOrNull();
   }
 
+  // Get a user by Username and Password
+  Future<User?> getUserByUsernameAndPassword(String username, String password) {
+    return (select(users)..where(
+          (tbl) => tbl.name.equals(username) & tbl.password.equals(password),
+        ))
+        .getSingleOrNull();
+  }
 }
